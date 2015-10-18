@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>PB</title>
+</head>
+<body>
+<div id="bar" style="font-family: monospace">&nbsp;</div>
+<script>
+function progressbar(total){
+    var start_time = parseInt(new Date().getTime() / 1000, 10);
+    var current = 0;
+    return function (){
+        current += 1;
+        var percents = Math.round(current / total *100, 1);
+        var len = Math.floor(Math.min(percents, 100) * 0.6);
+        var eta = Math.round((parseInt(new Date().getTime() / 1000, 10) - start_time) / current * (total - current), 2);
+        var result = ['<span style="color: blue">*</span>',
+                  ' [<span style="color: green">', new Array( len + 1 ).join( '#' ), '</span>',
+                  '<span>', new Array( 60 - len + 1 ).join( '-' ), '</span>] ',
+                  '<span>(', current, '/', total, ')</span>',
+                  '<span style="color: blue"> ', percents, '%</span> ',
+                  '<span>ETA:</span>',
+                  '<span style="color: orange"> ', Math.floor(eta/60), ':', Math.floor(eta%60), 's</span>'];
+        document.getElementById('bar').innerHTML = result.join('');
+    };
+}
+var len = 70;
+var update_bar = progressbar(len);
+(function hard_operation(){
+    if(len--){
+        update_bar()
+        setTimeout(hard_operation, 300);
+    }
+})(len);
+</script>
+</body>
+</html>
